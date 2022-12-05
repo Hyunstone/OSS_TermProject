@@ -50,4 +50,3 @@ def onMouse(event, x, y, flags, param):
                 ptOld = (x, y)
                 break
 
-
