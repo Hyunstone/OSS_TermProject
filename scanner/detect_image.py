@@ -52,7 +52,7 @@ def onMouse(event, x, y, flags, param):
 
 
 # 입력 이미지 불러오기
-src = cv2.imread('Termp\\new.jpg')
+src = cv2.imread('image\\example.jpg')
 src = imutils.resize(src, height = 800)
 
 if src is None:
@@ -82,3 +82,13 @@ while True:
     elif key == 27:  # ESC 키
         cv2.destroyWindow('img')
         sys.exit()
+
+# 투시 변환
+pers = cv2.getPerspectiveTransform(srcQuad, dstQuad)
+dst = cv2.warpPerspective(src, pers, (dw, dh), flags=cv2.INTER_CUBIC)
+
+# 결과 영상 출력
+cv2.imshow('dst', dst)
+cv2.imwrite("detext_result\\input.jpg", dst)
+cv2.waitKey()
+cv2.destroyAllWindows()
