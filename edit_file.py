@@ -50,3 +50,6 @@ def onMouse(event, x, y, flags, param):
                 ptOld = (x, y)
                 break
 
+# 입력 이미지 불러오기
+src = cv2.imread('Termp\\new.jpg')
+src = imutils.resize(src, height = 800)
