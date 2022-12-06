@@ -53,3 +53,62 @@ def onMouse(event, x, y, flags, param):
 # 입력 이미지 불러오기
 src = cv2.imread('Termp\\new.jpg')
 src = imutils.resize(src, height = 800)
+
+if src is None:
+    print('Image open failed!')
+    sys.exit()
+
+# 입력 영상 크기 및 출력 영상 크기
+h, w = src.shape[:2]
+dw = 500
+dh = round(dw * 297 / 210)  # A4 용지 크기: 210x297cm
+
+# 모서리 점들의 좌표, 드래그 상태 여부
+srcQuad = np.array([[30, 30], [30, h-30], [w-30, h-30], [w-30, 30]], np.float32)
+dstQuad = np.array([[0, 0], [0, dh-1], [dw-1, dh-1], [dw-1, 0]], np.float32)
+dragSrc = [False, False, False, False]
+
+# 모서리점, 사각형 그리기
+disp = drawROI(src, srcQuad)
+
+cv2.imshow('img', disp)
+cv2.setMouseCallback('img', onMouse)
+
+while True:
+    key = cv2.waitKey()
+    if key == 13:  # ENTER 키
+        break
+    elif key == 27:  # ESC 키
+        cv2.destroyWindow('img')
+        sys.exit()
+
+# 투시 변환
+pers = cv2.getPerspectiveTransform(srcQuad, dstQuad)
+dst = cv2.warpPerspective(src, pers, (dw, dh), flags=cv2.INTER_CUBIC)
+
+# 결과 영상 출력
+cv2.imshow('dst', dst)
+cv2.imwrite("Termp\\input.jpg", dst)
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+
+imgPath = "Termp\\input.jpg"
+img = cv2.imread(imgPath)
+orig = img.copy()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+gray = cv2.bilateralFilter(gray, 11, 17, 17)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+edge = cv2.Canny(blur, 75, 200)
+
+th = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+# th__ = cv2.adaptiveThreshold(edge,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+#             cv2.THRESH_BINARY,11,2)
+
+cv2.imshow("not edge", th)
+# cv2.imshow("edge", th__)
+cv2.imwrite("Termp\\output.jpg", th)
+cv2.waitKey(0)
+cv2.destroyAllWindows()	
