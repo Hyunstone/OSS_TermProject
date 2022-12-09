@@ -6,7 +6,7 @@ from tkinter import *
 from tkinter import filedialog
 from os import path
 import threading
-from file_choice import fileSearch, snapshot, catptureButtonRun, playCam, Photo
+from file import fileSearch, snapshot, catptureButtonRun, playCam, Photo
 
 
 a = 0
@@ -136,11 +136,8 @@ edge = cv2.Canny(blur, 75, 200)
 
 th = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
-# th__ = cv2.adaptiveThreshold(edge,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-#             cv2.THRESH_BINARY,11,2)
 
 cv2.imshow("Transform", th)
-# cv2.imshow("edge", th__)
-cv2.imwrite("Transformed scan image.jpg", th)
+cv2.imwrite("detect_result\\Transformed_scan_image.jpg", th)
 cv2.waitKey(0)
 cv2.destroyAllWindows()	
