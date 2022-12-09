@@ -2,10 +2,22 @@ import sys
 import numpy as np
 import cv2
 import imutils
+from tkinter import *
+from tkinter import filedialog
+from os import path
+import threading
+from file_choice import fileSearch, snapshot, catptureButtonRun, playCam, Photo
 
 
-def drawROI(img, corners):
-    cpy = img.copy()
+a = 0
+choiceFileSrc = 0
+def fileSearch():
+    global choiceFileSrc
+    file = filedialog.askopenfilename(initialdir= path.dirname(__file__))
+    choiceFileSrc = file
+
+def drawROI(choiceFileSrc, corners):
+    cpy = choiceFileSrc.copy()
 
     c1 = (192, 192, 255)
     c2 = (128, 128, 255)
@@ -18,10 +30,9 @@ def drawROI(img, corners):
     cv2.line(cpy, tuple(corners[2].astype(int)), tuple(corners[3].astype(int)), c2, 2, cv2.LINE_AA)
     cv2.line(cpy, tuple(corners[3].astype(int)), tuple(corners[0].astype(int)), c2, 2, cv2.LINE_AA)
 
-    disp = cv2.addWeighted(img, 0.3, cpy, 0.7, 0)
+    disp = cv2.addWeighted(choiceFileSrc, 0.3, cpy, 0.7, 0)
 
     return disp
-
 
 def onMouse(event, x, y, flags, param):
     global srcQuad, dragSrc, ptOld, src
@@ -49,10 +60,30 @@ def onMouse(event, x, y, flags, param):
                 cv2.imshow('img', cpy)
                 ptOld = (x, y)
                 break
+    
+
+def main():
+    root = Tk()
+
+    label = Label(root, text = '명령을 실행하고 종료하세요') 
+    label.pack()
+
+    button = Button(root, text = '파일 열기', command = fileSearch)
+    button.pack(side = LEFT, padx = 50,pady = 10) #side로 배치설정, padx로 좌우 여백설정, pady로 상하 여백설정 
+
+    button2 = Button(root, text ='사진 촬영', command = Photo)
+    button2.pack(side = LEFT, padx = 10, pady = 10)
+    
+    
+    root.mainloop()
+    
+if __name__ == "__main__":
+    main()
+
 
 
 # 입력 이미지 불러오기
-src = cv2.imread('image\\example.jpg')
+src = cv2.imread(choiceFileSrc)
 src = imutils.resize(src, height = 800)
 
 if src is None:
@@ -88,7 +119,28 @@ pers = cv2.getPerspectiveTransform(srcQuad, dstQuad)
 dst = cv2.warpPerspective(src, pers, (dw, dh), flags=cv2.INTER_CUBIC)
 
 # 결과 영상 출력
-cv2.imshow('dst', dst)
-cv2.imwrite("detext_result\\input.jpg", dst)
+cv2.imshow('Scan', dst)
+cv2.imwrite(choiceFileSrc, dst)
 cv2.waitKey()
 cv2.destroyAllWindows()
+
+
+imgPath = choiceFileSrc
+img = cv2.imread(imgPath)
+orig = img.copy()
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+gray = cv2.bilateralFilter(gray, 11, 17, 17)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+edge = cv2.Canny(blur, 75, 200)
+
+th = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+# th__ = cv2.adaptiveThreshold(edge,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+#             cv2.THRESH_BINARY,11,2)
+
+cv2.imshow("Transform", th)
+# cv2.imshow("edge", th__)
+cv2.imwrite("Transformed scan image.jpg", th)
+cv2.waitKey(0)
+cv2.destroyAllWindows()	
