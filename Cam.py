@@ -1,3 +1,16 @@
+import cv2
+from os import path
+import threading
+
+def snapshot():
+    global a
+    a = 1
+
+def catptureButtonRun():
+    captureWindow = Toplevel()
+    captureButton = Button(captureWindow, text = '촬영', command = snapshot)
+    captureButton.pack(side = LEFT, padx = 100, pady = 50)
+
 def playCam():
     # 사진 찍기
     camera = cv2.VideoCapture(0) # 카메라 open
@@ -24,3 +37,12 @@ def playCam():
                 
     camera.release()
     cv2.destroyAllWindows()
+    
+def photo():
+    captureButtonThread = threading.Thread(target = catptureButtonRun)
+    captureButtonThread.daemon = True
+    captureButtonThread.start()
+    
+    photo_thread = threading.Thread(target = playCam)
+    photo_thread.daemon = True
+    photo_thread.start()
