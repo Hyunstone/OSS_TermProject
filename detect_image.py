@@ -62,7 +62,7 @@ if src is None:
 # 입력 영상 크기 및 출력 영상 크기
 h, w = src.shape[:2]
 dw = 500
-dh = round(dw * 297 / 210)  # A4 용지 크기: 210x297cm
+dh = round(dw * 297 / 210) 
 
 # 모서리 점들의 좌표, 드래그 상태 여부
 srcQuad = np.array([[30, 30], [30, h-30], [w-30, h-30], [w-30, 30]], np.float32)
@@ -87,26 +87,30 @@ while True:
 pers = cv2.getPerspectiveTransform(srcQuad, dstQuad)
 dst = cv2.warpPerspective(src, pers, (dw, dh), flags=cv2.INTER_CUBIC)
 
-# 결과 영상 출력
+# 결과 출력
 cv2.imshow('dst', dst)
 cv2.imwrite("Termp\\input.jpg", dst)
 cv2.waitKey()
 cv2.destroyAllWindows()
 
 
+# 변환한 이미지 불러오기
 imgPath = "Termp\\input.jpg"
 img = cv2.imread(imgPath)
 orig = img.copy()
 
+# fileter, blur 처리하기
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 gray = cv2.bilateralFilter(gray, 11, 17, 17)
 blur = cv2.GaussianBlur(gray, (5, 5), 0)
 edge = cv2.Canny(blur, 75, 200)
 
+# thresold 값으로 엣지 추출
 th = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
 
-cv2.imshow("not edge", th)
+# 최종 결과 출력 및 파일 저장
+cv2.imshow("reulst", th)
 cv2.imwrite("Termp\\output.jpg", th)
 cv2.waitKey(0)
 cv2.destroyAllWindows()	
