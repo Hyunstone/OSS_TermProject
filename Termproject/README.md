@@ -7,6 +7,10 @@ This program's purpose is easy to see the unclearable document. It works whether
 #### Download file_choice.py and scanner.py first
 
 
+### If you get error message "no module imutils" write pip install imutils in your code terminal. 
+### If there is also a cv2 error, please try pip install opencv-python again. 
+
+
 #### 1. When you have a document file in your computer.   
 
   + If you have a document what you want to make clearable on your computer please push the button "파일열기"
