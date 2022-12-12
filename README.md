@@ -1,12 +1,22 @@
 ## OSS_TermProject
-
 # Title: Scanner
 
-This program's purpose is easy to see the unclearable document. It works whether the document you want to scan exists as an image file or not. So it can be used everywhere easily.
+This program's purpose is easy to see the unclearable document. It works whether the document you want to scan exists as an image file or not. So it can be used everywhere easily.    
 
-### How?
 
-#### Download file_choice.py and scanner.py which is in Termproject folder.
+
+## Download additional package
+
++ If you get error message "no module imutils" write pip install imutils in your code terminal. 
++ If there is also a cv2 error, please try pip install opencv-python again.  
+  
+    
+      
+
+
+## How?
+
+#### Download file_choice.py and scanner.py first   
 
 
 #### 1. When you have a document file in your computer.   
@@ -47,6 +57,18 @@ This program's purpose is easy to see the unclearable document. It works whether
 
     
    <img width="362" alt="result" src="https://user-images.githubusercontent.com/113345127/207014313-f98b71ed-6948-4a92-a169-2ca06c42aba5.png">
+
+
+
+### Reference Data
+
+
+
+
+
+
+
+
 
 
 
